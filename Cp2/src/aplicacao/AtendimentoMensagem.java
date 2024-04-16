@@ -17,6 +17,7 @@ public class AtendimentoMensagem {
 		// Aluno: Victor Yudi rm: 98046
 
 		Scanner entrada = new Scanner(System.in);
+		Mensagem mensagem = null;
 		FilaMensagem filaReclamacao = new FilaMensagem();
 		filaReclamacao.init();
 
@@ -67,23 +68,24 @@ public class AtendimentoMensagem {
 				}
 
 				System.out.println("Mensagem (texto): ");
-				mensagemTexto = entrada.next();
-				entrada.nextLine();
+				mensagemTexto = entrada.nextLine();
+				mensagemTexto = entrada.nextLine();
+
 				System.out.println("Mensagem recebida com sucesso!");
 				System.out.println("");
-				Mensagem mensagem = new Mensagem(identificacao, motivo, mensagemTexto);
+				mensagem = new Mensagem(identificacao, motivo, mensagemTexto);
 
 				if (motivo == 1) {
-					filaReclamacao.enqueue(identificacao);
-					filaResolucao.enqueue(identificacao);
+					filaReclamacao.enqueue(mensagem);
 				} else {
 					if (motivo == 2) {
-						filaSugestao.enqueue(identificacao);
+						filaSugestao.enqueue(mensagem);
 					}
 				}
 				break;
 
 			case 2:
+				String resposta;
 				int motivoAtendimento;
 				System.out.println("Digite a opção a ser atendida (1-reclamação/ 2-sugestão):");
 				motivoAtendimento = entrada.nextInt();
@@ -94,34 +96,69 @@ public class AtendimentoMensagem {
 				}
 				if (motivoAtendimento == 1) {
 					if (!filaReclamacao.isEmpty()) {
-						System.out.println("Enviada resposta para cliente: " + filaReclamacao.dequeue()
-								+ " - Sua solicitação já foi resolvida. Obrigado!!!");
+						System.out.println("Cliente: " + filaReclamacao.first().getIdentificacao() + " - Mensagem: "
+								+ filaReclamacao.first().getMensagem());
+						System.out.println();
+						System.out.println("O assunto pode ser prontamente respondido? (Sim/Não)");
+						resposta = entrada.next();
+						if (resposta.equalsIgnoreCase("Sim")) {
+							System.out.println(
+									"Enviada resposta para cliente: " + filaReclamacao.first().getIdentificacao()
+											+ " - Sua solicitação já foi resolvida. Obrigado!!!");
+							filaReclamacao.dequeue();
+						} else {
+							System.out.println("Aguardar resposta do setor responsável pelo assunto");
+							filaResolucao.enqueue(filaReclamacao.dequeue());
+						}
 					} else {
-						System.out.println("Não ha reclamações aguardando na fila");
+						System.out.println("Não há reclamações aguardando na fila");
+
 					}
 				} else {
 					if (motivoAtendimento == 2) {
 						if (!filaSugestao.isEmpty()) {
-							System.out.println("Enviada resposta para cliente: " + filaSugestao.dequeue()
-									+ " - Sua solicitação já foi resolvida. Obrigado!!!");
+							System.out.println("Cliente: " + filaSugestao.first().getIdentificacao() + " - Mensagem: "
+									+ filaSugestao.first().getMensagem());
+							System.out.println();
+							System.out.println("O assunto pode ser prontamente respondido? (Sim/Não)");
+							resposta = entrada.next();
+							if (resposta.equalsIgnoreCase("Sim")) {
+								System.out.println(
+										"Enviada resposta para cliente: " + filaSugestao.first().getIdentificacao()
+												+ " - Sua solicitação já foi resolvida. Obrigado!!!");
+								filaSugestao.dequeue();
+							} else {
+								System.out.println("Aguardar resposta do setor responsável pelo assunto");
+								filaResolucao.enqueue(filaSugestao.dequeue());
+							}
 						} else {
-							System.out.println("Não ha sugestões aguardando na fila");
+							System.out.println("Não há sugestões aguardando na fila");
 						}
 					}
 				}
 				break;
 
 			case 3:
+				if (!filaResolucao.isEmpty()) {
+					System.out.println("Cliente: " + filaResolucao.first().getIdentificacao() + " - Mensagem: "
+							+ filaResolucao.first().getMensagem());
+					System.out.println("");
+					System.out.println("Enviada resposta para cliente: " + filaResolucao.first().getIdentificacao()
+							+ " solicitação já foi resolvida pelo setor responsável. Obrigado!!!");
+					filaResolucao.dequeue();
+				} else {
+					System.out.println("Não há mensagens na fila de resolução");
+				}
 
 				break;
 
 			default:
 				System.out.println("Opção inválida");
-
 			}
 
 		} while (opcao != 0);
 
+		entrada.close();
 	}
 
 }

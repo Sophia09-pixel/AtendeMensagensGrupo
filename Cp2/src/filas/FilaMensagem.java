@@ -1,9 +1,12 @@
 package filas;
 
-public class FilaMensagem {
+import entidades.Mensagem;
 
+public class FilaMensagem {
+	Mensagem mensagem;
+	
 	public final int N = 3;
-	String dados[] = new String[N];
+	Mensagem dados[] = new Mensagem[N];
 	int ini, fim, cont;
 
 	public void init() {
@@ -15,7 +18,7 @@ public class FilaMensagem {
 	public boolean isFull() {
 		return (cont==N);
 	}
-	public void enqueue(String elem) {
+	public void enqueue(Mensagem elem) {
 		if (isFull())
 			System.out.println("Fila cheia");
 		else {
@@ -24,14 +27,14 @@ public class FilaMensagem {
 			cont++;
 		}
 	}
-	public String dequeue() {
-		String elem = dados[ini];
+	public Mensagem dequeue() {
+		Mensagem elem = dados[ini];
 		ini = (ini+1) % N;
 		cont--;
 		return elem;
 	}
 	
-	public String first() {
+	public Mensagem first() {
 		return dados[ini];
 	}
 	
