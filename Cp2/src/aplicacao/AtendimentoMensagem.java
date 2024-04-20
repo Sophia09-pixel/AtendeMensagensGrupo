@@ -126,6 +126,10 @@ public class AtendimentoMensagem {
 							System.out.println();
 							System.out.println("O assunto pode ser prontamente respondido? (Sim/Não)");
 							resposta = entrada.next();
+							while(!resposta.equalsIgnoreCase("Sim")&& !resposta.equalsIgnoreCase("Não")) {
+								System.out.println("Resposta Inválida! (Sim/Não)");
+								resposta = entrada.next();
+							}
 							if (resposta.equalsIgnoreCase("Sim")) {
 								System.out.println(
 										"Enviada resposta para cliente: " + filaSugestao.first().getIdentificacao()
