@@ -5,7 +5,7 @@ import entidades.Mensagem;
 public class FilaMensagem {
 	Mensagem mensagem;
 	
-	public final int N = 3;
+	public final int N = 10;
 	Mensagem dados[] = new Mensagem[N];
 	int ini, fim, cont;
 
